@@ -1,5 +1,5 @@
 define(function(){ return '\
-.-delite-fade {\
+.-d-view-stack-fade {\
   -moz-transition-property: none;\
   -webkit-transition-property: none;\
   transition-property: none;\
@@ -7,7 +7,7 @@ define(function(){ return '\
   -webkit-transition-duration: 0s;\
   transition-duration: 0s;\
 }\
-.-delite-fade.-delite-transition {\
+.-d-view-stack-fade.-d-view-stack-transition {\
   -moz-transition-property: opacity;\
   -webkit-transition-property: opacity;\
   transition-property: opacity;\
@@ -15,19 +15,19 @@ define(function(){ return '\
   -webkit-transition-duration: 0.6s;\
   transition-duration: 0.6s;\
 }\
-.-delite-fade.-delite-out {\
+.-d-view-stack-fade.-d-view-stack-out {\
   opacity: 1;\
 }\
-.-delite-fade.-delite-out.-delite-transition {\
+.-d-view-stack-fade.-d-view-stack-out.-d-view-stack-transition {\
   -moz-transition-timing-function: ease-out;\
   -webkit-transition-timing-function: ease-out;\
   transition-timing-function: ease-out;\
   opacity: 0;\
 }\
-.-delite-fade.-delite-in {\
+.-d-view-stack-fade.-d-view-stack-in {\
   opacity: 0;\
 }\
-.-delite-fade.-delite-in.-delite-transition {\
+.-d-view-stack-fade.-d-view-stack-in.-d-view-stack-transition {\
   -moz-transition-timing-function: ease-in;\
   -webkit-transition-timing-function: ease-in;\
   transition-timing-function: ease-in;\

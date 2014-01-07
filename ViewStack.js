@@ -27,12 +27,12 @@ define(["dcl/dcl",
 		}
 		function setReverse(node) {
 			if (node) {
-				domClass.add(node, "-delite-reverse");
+				domClass.add(node, "-d-view-stack-reverse");
 			}
 		}
 
 		function transitionClass(s) {
-			return "-delite-" + s;
+			return "-d-view-stack-" + s;
 		}
 
 		return register("d-view-stack", [HTMLElement, Widget, DisplayContainer], {
@@ -69,29 +69,27 @@ define(["dcl/dcl",
 			//		This attribute is supported by "slide" and "reveal" transition types.
 			reverse: false,
 
-			_transitionTiming: {default: 0, chrome: 20, ios: 20, android: 100, mozilla: 100},
-
-			_timing: 0,
-			_visibleChild: null,
-			_transitionEndHandlers: [],
-
 			preCreate: function () {
 				for (var o in this._transitionTiming) {
 					if (has(o) && this._timing < this._transitionTiming[o]) {
 						this._timing = this._transitionTiming[o];
 					}
 				}
+				this._transitionTiming = {default: 0, chrome: 20, ios: 20, android: 100, mozilla: 100};
+				this._transitionEndHandlers = [];
+				this._timing = 0;
 			},
 
 			buildRendering: function () {
+				// Keep visible the first child, hide others
 				for (var i = 1; i < this.children.length; i++) {
 					setVisibility(this.children[i], false);
 				}
 			},
 
 			showNext: function (props) {
-				//		Shows the next children in the container.
-				//		The current children must implement getNextSlibling method which is available
+				//		Shows the next child in the container.
+				//		The current child must implement getNextSlibling method which is available
 				//		in the Contained class.
 				if (!this._visibleChild && this.children.length > 0) {
 					this._visibleChild = this.children[0];
@@ -130,8 +128,8 @@ define(["dcl/dcl",
 					if (dest) {
 						this._setAfterTransitionHandlers(dest, event, deferred);
 						domClass.add(dest, transitionClass(event.transition));
-						domClass.remove(dest, "-delite-transition");
-						domClass.add(dest, "-delite-in");
+						domClass.remove(dest, "-d-view-stack-transition");
+						domClass.add(dest, "-d-view-stack-in");
 					}
 					if (event.reverse) {
 						setReverse(origin);
@@ -139,18 +137,18 @@ define(["dcl/dcl",
 					}
 					this.defer(function () {
 						if (dest) {
-							domClass.add(dest, "-delite-transition");
+							domClass.add(dest, "-d-view-stack-transition");
 						}
 						if (origin) {
-							domClass.add(origin, "-delite-transition");
-							domClass.add(origin, "-delite-out");
+							domClass.add(origin, "-d-view-stack-transition");
+							domClass.add(origin, "-d-view-stack-out");
 						}
 						if (event.reverse) {
 							setReverse(origin);
 							setReverse(dest);
 						}
 						if (dest) {
-							domClass.add(dest, "-delite-in");
+							domClass.add(dest, "-d-view-stack-in");
 						}
 					}, this._timing);
 				} else {
@@ -207,14 +205,14 @@ define(["dcl/dcl",
 				for (var i = 0; i < this._transitionEndHandlers.length; i++) {
 					item = this._transitionEndHandlers[i];
 					if (event.target === item.node) {
-						if (domClass.contains(item.node, "-delite-out")) {
+						if (domClass.contains(item.node, "-d-view-stack-out")) {
 							setVisibility(item.node, false);
 						}
-						domClass.remove(item.node, "-delite-in");
-						domClass.remove(item.node, "-delite-out");
-						domClass.remove(item.node, "-delite-reverse");
+						domClass.remove(item.node, "-d-view-stack-in");
+						domClass.remove(item.node, "-d-view-stack-out");
+						domClass.remove(item.node, "-d-view-stack-reverse");
 						domClass.remove(item.node, transitionClass(item.props.transition));
-						domClass.remove(item.node, "-delite-transition");
+						domClass.remove(item.node, "-d-view-stack-transition");
 						item.node.removeEventListener("webkitTransitionEnd", item.handle);
 						item.node.removeEventListener("transitionend", item.handle);
 						this._transitionEndHandlers.splice(i, 1);
