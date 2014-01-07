@@ -18,12 +18,12 @@ define([
 		// description:
 		//		When mixed into a widget, this mixin adds to it scrolling capabilities
 		//		based on the overflow: scroll CSS property.
-		//		By default, the scrolling capabilities are added to the widget 
+		//		By default, the scrolling capabilities are added to the widget
 		//		node itself. The host widget can chose the node thanks to the property
-		//		'scrollableNode'. 
+		//		'scrollableNode'.
 		//		During interactive or programmatic scrolling, native "scroll"
-		//		events are emitted, and can be listen as follows (here, 
-		//		'scrollWidget' is the widget into which this mixin is mixed): 
+		//		events are emitted, and can be listen as follows (here,
+		//		'scrollWidget' is the widget into which this mixin is mixed):
 		// | scrollWidget.on("scroll", function () {
 		// |	...
 		// | }
@@ -35,15 +35,15 @@ define([
 		//		The direction of the interactive scroll. Possible values are:
 		//		"vertical", "horizontal", "both, and "none". The default value is "vertical".
 		//		Note that scrolling programmatically using scrollTo() is
-		//		possible on both horizontal and vertical directions independently 
+		//		possible on both horizontal and vertical directions independently
 		//		on the value of scrollDirection.
 		scrollDirection: "vertical",
 
 		// scrollableNode: [readonly] DomNode
-		//		Designates the descendant of this widget which is made scrollable. 
-		//		The default value is 'null'. If not set, defaults to this widget 
+		//		Designates the descendant of this widget which is made scrollable.
+		//		The default value is 'null'. If not set, defaults to this widget
 		//		itself ('this').
-		//		Note that this property can be set only at construction time, as a 
+		//		Note that this property can be set only at construction time, as a
 		//		constructor argument or in markup as a property of the widget into
 		//		which this class is mixed.
 		scrollableNode: null,
@@ -64,25 +64,16 @@ define([
 			scrollDirection = this.scrollDirection;
 
 			if (scrollDirection === "none") {
-				domClass.remove(this.scrollableNode, "d-scrollable");
+				domClass.remove(scrollableNode, "d-scrollable");
 			} else {
-				domClass.add(this.scrollableNode, "d-scrollable");
+				domClass.add(scrollableNode, "d-scrollable");
 			}
-			dom.setSelectable(this.scrollableNode, false);
+			dom.setSelectable(scrollableNode, false);
 
-			if (scrollDirection === "horizontal") {
-				domStyle.set(scrollableNode, "overflowX", "scroll");
-				domStyle.set(scrollableNode, "overflowY", ""); // restore the default
-			} else if (scrollDirection === "vertical") {
-				domStyle.set(scrollableNode, "overflowX", ""); // restore the default
-				domStyle.set(scrollableNode, "overflowY", "scroll");
-			} else if (scrollDirection === "both") {
-				domStyle.set(scrollableNode, "overflowX", "scroll");
-				domStyle.set(scrollableNode, "overflowY", "scroll");
-			} else if (scrollDirection === "none") {
-				domStyle.set(scrollableNode, "overflowX", ""); // restore the default
-				domStyle.set(scrollableNode, "overflowY", ""); // restore the default
-			} // else: do nothing for unsupported values
+			domStyle.set(scrollableNode, "overflowX",
+				/^(both|horizontal)$/.test(scrollDirection) ? "scroll" : "");
+			domStyle.set(scrollableNode, "overflowY",
+				/^(both|vertical)$/.test(scrollDirection) ? "scroll" : "");
 		},
 
 		buildRendering: function () {
@@ -151,9 +142,11 @@ define([
 		getCurrentScroll: function () {
 			// summary:
 			//		Returns the current amount of scroll, as an object with x and y properties
-			//		for the horizontal and vertical scroll amount. TODO: improve the doc.
+			//		for the horizontal and vertical scroll amount.
+			//		This is a convenience method and it is not supposed to be overridden.
+			//		TODO: improve the doc.
 			// returns: Object
-			return {x: this.scrollLeft, y: this.scrollTop};
+			return {x: this.scrollableNode.scrollLeft, y: this.scrollableNode.scrollTop};
 		},
 
 		scrollBy: function (by, duration) {
@@ -164,7 +157,7 @@ define([
 			//		{x:0, y:-5} or {y:-29}.
 			// duration:
 			//		Duration of scrolling animation in milliseconds. If 0 or unspecified,
-			//		scrolls without animation. 
+			//		scrolls without animation.
 			var to = {};
 			if (by.x !== undefined) {
 				to.x = this.scrollableNode.scrollLeft + by.x;
@@ -183,7 +176,7 @@ define([
 			//		for example {x:0, y:-5} or {y:-29}.
 			// duration:
 			//		Duration of scrolling animation in milliseconds. If 0 or unspecified,
-			//		scrolls without animation. 
+			//		scrolls without animation.
 
 			var self = this;
 			var scrollableNode = this.scrollableNode;
