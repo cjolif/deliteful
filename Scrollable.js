@@ -5,8 +5,8 @@ define([
 	"dojo/dom-class",
 	"dojo/_base/fx",
 	"dojo/fx/easing",
-	"./Invalidating",
-	"./themes/load!./themes/{{theme}}/Scrollable"
+	"delite/Invalidating",
+	"delite/themes/load!./Scrollable/themes/{{theme}}/Scrollable_css"
 ], function (dcl, dom, domStyle, domClass, baseFx, easing, Invalidating) {
 
 	// module:
