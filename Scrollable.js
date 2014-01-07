@@ -5,18 +5,31 @@ define([
 	"dojo/dom-class",
 	"dojo/_base/fx",
 	"dojo/fx/easing",
-	"delite/Invalidating",
-	"delite/themes/load!./Scrollable/themes/{{theme}}/Scrollable_css"
+	"./Invalidating",
+	"./themes/load!./themes/{{theme}}/Scrollable"
 ], function (dcl, dom, domStyle, domClass, baseFx, easing, Invalidating) {
 
 	// module:
 	//		dui/Scrollable
-	
+
 	return dcl(Invalidating, {
 		// summary:
 		//		A mixin which adds scrolling capabilities to a widget.
 		// description:
-		//		TODO
+		//		When mixed into a widget, this mixin adds to it scrolling capabilities
+		//		based on the overflow: scroll CSS property.
+		//		By default, the scrolling capabilities are added to the widget 
+		//		node itself. The host widget can chose the node thanks to the property
+		//		'scrollableNode'. 
+		//		During interactive or programmatic scrolling, native "scroll"
+		//		events are emitted, and can be listen as follows (here, 
+		//		'scrollWidget' is the widget into which this mixin is mixed): 
+		// | scrollWidget.on("scroll", function () {
+		// |	...
+		// | }
+		//		For widgets that customize the 'scrollableNode' property,
+		//		the events should be listen on widget.scrollableNode.
+		//		TODO: improve the doc.
 
 		// scrollDirection: String
 		//		The direction of the interactive scroll. Possible values are:
@@ -25,7 +38,7 @@ define([
 		//		possible on both horizontal and vertical directions independently 
 		//		on the value of scrollDirection.
 		scrollDirection: "vertical",
-		
+
 		// scrollableNode: [readonly] DomNode
 		//		Designates the descendant of this widget which is made scrollable. 
 		//		The default value is 'null'. If not set, defaults to this widget 
@@ -34,7 +47,7 @@ define([
 		//		constructor argument or in markup as a property of the widget into
 		//		which this class is mixed.
 		scrollableNode: null,
-		
+
 		preCreate: function () {
 			this.addInvalidatingProperties("scrollDirection");
 		},
@@ -42,21 +55,21 @@ define([
 		refreshRendering: function () {
 			var scrollableNode;
 			var scrollDirection;
-			
+
 			if (!this.scrollableNode) {
 				this.scrollableNode = this; // If unspecified, defaults to 'this'.
 			}
-			
+
 			scrollableNode = this.scrollableNode;
 			scrollDirection = this.scrollDirection;
-			
+
 			if (scrollDirection === "none") {
 				domClass.remove(this.scrollableNode, "d-scrollable");
 			} else {
 				domClass.add(this.scrollableNode, "d-scrollable");
 			}
 			dom.setSelectable(this.scrollableNode, false);
-			
+
 			if (scrollDirection === "horizontal") {
 				domStyle.set(scrollableNode, "overflowX", "scroll");
 				domStyle.set(scrollableNode, "overflowY", ""); // restore the default
@@ -72,10 +85,10 @@ define([
 			} // else: do nothing for unsupported values
 		},
 
-		buildRendering: dcl.after(function () {
+		buildRendering: function () {
 			this.invalidateRendering();
-		}),
-		
+		},
+
 		isTopScroll: function () {
 			// summary:
 			//		Returns true if container's scroll has reached the maximum at
@@ -89,7 +102,7 @@ define([
 			// returns: Boolean
 			return this.scrollableNode.scrollTop === 0;
 		},
-		
+
 		isBottomScroll: function () {
 			// summary:
 			//		Returns true if container's scroll has reached the maximum at
@@ -105,7 +118,7 @@ define([
 			return scrollableNode.offsetHeight + scrollableNode.scrollTop >=
 				scrollableNode.scrollHeight;
 		},
-		
+
 		isLeftScroll: function () {
 			// summary:
 			//		Returns true if container's scroll has reached the maximum at
@@ -119,7 +132,7 @@ define([
 			// returns: Boolean
 			return this.scrollableNode.scrollLeft === 0;
 		},
-		
+
 		isRightScroll: function () {
 			// summary:
 			//		Returns true if container's scroll has reached the maximum at
@@ -142,7 +155,7 @@ define([
 			// returns: Object
 			return {x: this.scrollLeft, y: this.scrollTop};
 		},
-		
+
 		scrollBy: function (by, duration) {
 			// summary:
 			//		Scrolls by the given amount.
@@ -153,15 +166,15 @@ define([
 			//		Duration of scrolling animation in milliseconds. If 0 or unspecified,
 			//		scrolls without animation. 
 			var to = {};
-			if (by.x) {
+			if (by.x !== undefined) {
 				to.x = this.scrollableNode.scrollLeft + by.x;
 			}
-			if (by.y) {
+			if (by.y !== undefined) {
 				to.y = this.scrollableNode.scrollTop + by.y;
 			}
 			this.scrollTo(to, duration);
 		},
-		
+
 		scrollTo: function (to, /*Number?*/duration) {
 			// summary:
 			//		Scrolls to the given position.
@@ -171,20 +184,20 @@ define([
 			// duration:
 			//		Duration of scrolling animation in milliseconds. If 0 or unspecified,
 			//		scrolls without animation. 
-			
+
 			var self = this;
 			var scrollableNode = this.scrollableNode;
 			if (!duration || duration <= 0) { // shortcut
-				if (to.x) {
+				if (to.x !== undefined) {
 					scrollableNode.scrollLeft = to.x;
 				}
-				if (to.y) {
+				if (to.y !== undefined) {
 					scrollableNode.scrollTop = to.y;
 				}
 			} else {
 				var from = {
-					x: to.x ? scrollableNode.scrollLeft : undefined,
-					y: to.y ? scrollableNode.scrollTop : undefined
+					x: to.x !== undefined ? scrollableNode.scrollLeft : undefined,
+					y: to.y !== undefined ? scrollableNode.scrollTop : undefined
 				};
 				var animation = function () {
 					if (self._animation && self._animation.status() === "playing") {
@@ -206,10 +219,10 @@ define([
 							anim.curve = new baseFx._Line(from, to);
 						},
 						onAnimate: function (val) {
-							if (val.x) {
+							if (val.x !== undefined) {
 								scrollableNode.scrollLeft = val.x;
 							}
-							if (val.y) {
+							if (val.y !== undefined) {
 								scrollableNode.scrollTop = val.y;
 							}
 						},
