@@ -2,18 +2,17 @@ define(["dcl/dcl",
 	"dojo/sniff",
 	"dojo/on",
 	"dojo/Deferred",
-	"dojo/_base/lang",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
 	"delite/register",
 	"delite/Widget",
 	"delite/DisplayContainer",
 	"delite/themes/load!./ViewStack/themes/{{theme}}/ViewStack_css",
-	"delite/css!./ViewStack/transitions/slide",
-	"delite/css!./ViewStack/transitions/reveal",
-	"delite/css!./ViewStack/transitions/flip",
-	"delite/css!./ViewStack/transitions/fade"],
-	function (dcl, has, on, Deferred, lang, domGeometry, domClass, register, Widget, DisplayContainer) {
+	"delite/css!./ViewStack/transitions/slide_css",
+	"delite/css!./ViewStack/transitions/reveal_css",
+	"delite/css!./ViewStack/transitions/flip_css",
+	"delite/css!./ViewStack/transitions/fade_css"],
+	function (dcl, has, on, Deferred, domGeometry, domClass, register, Widget, DisplayContainer) {
 		function setVisibility(node, val) {
 			if (node) {
 				if (val) {
@@ -69,15 +68,17 @@ define(["dcl/dcl",
 			//		This attribute is supported by "slide" and "reveal" transition types.
 			reverse: false,
 
+			_timing: 0,
+
 			preCreate: function () {
+				this._transitionTiming = {default: 0, chrome: 20, ios: 20, android: 100, mozilla: 100};
+				this._transitionEndHandlers = [];
+
 				for (var o in this._transitionTiming) {
 					if (has(o) && this._timing < this._transitionTiming[o]) {
 						this._timing = this._transitionTiming[o];
 					}
 				}
-				this._transitionTiming = {default: 0, chrome: 20, ios: 20, android: 100, mozilla: 100};
-				this._transitionEndHandlers = [];
-				this._timing = 0;
 			},
 
 			buildRendering: function () {
@@ -96,8 +97,6 @@ define(["dcl/dcl",
 				}
 				if (this._visibleChild && this._visibleChild.getNextSibling) {
 					this.show(this._visibleChild.getNextSibling(), props);
-				} else {
-					console.log("ViewStack's children must implement getNextSibling()");
 				}
 			},
 
@@ -110,8 +109,6 @@ define(["dcl/dcl",
 				}
 				if (this._visibleChild && this._visibleChild.getPreviousSibling) {
 					this.show(this._visibleChild.getPreviousSibling(), props);
-				} else {
-					console.log("ViewStack's children must implement getPreviousSibling()");
 				}
 			},
 
@@ -127,9 +124,8 @@ define(["dcl/dcl",
 					}
 					if (dest) {
 						this._setAfterTransitionHandlers(dest, event, deferred);
-						domClass.add(dest, transitionClass(event.transition));
+						domClass.add(dest, [transitionClass(event.transition), "-d-view-stack-in"]);
 						domClass.remove(dest, "-d-view-stack-transition");
-						domClass.add(dest, "-d-view-stack-in");
 					}
 					if (event.reverse) {
 						setReverse(origin);
@@ -140,8 +136,7 @@ define(["dcl/dcl",
 							domClass.add(dest, "-d-view-stack-transition");
 						}
 						if (origin) {
-							domClass.add(origin, "-d-view-stack-transition");
-							domClass.add(origin, "-d-view-stack-out");
+							domClass.add(origin, ["-d-view-stack-transition", "-d-view-stack-out"]);
 						}
 						if (event.reverse) {
 							setReverse(origin);
@@ -167,34 +162,35 @@ define(["dcl/dcl",
 					this._visibleChild = this.children[0];
 				}
 				var origin = this._visibleChild;
-				if (origin) {
-					if (node && origin !== node) {
-						if (!props) {
-							props = {transition: this.transition, reverse: this.reverse};
-						}
-						if (!props.transition) {
-							props.transition = this.transition;
-						}
-						dcl.mix(props, {
-							dest: node,
-							transitionDeferred: new Deferred(),
-							bubbles: true,
-							cancelable: true
-						});
-						on.emit(document, "delite-display", props);
+				if (origin !== node) {
+					if (!props) {
+						props = {transition: this.transition, reverse: this.reverse};
 					}
+					else if (!props.transition) {
+						props.transition = this.transition;
+					}
+					dcl.mix(props, {
+						dest: node,
+						transitionDeferred: new Deferred(),
+						bubbles: true,
+						cancelable: true
+					});
+					on.emit(document, "delite-display", props);
 				}
+
 			},
 
 			addChild: dcl.superCall(function (sup) {
-				return function (/*dui/Widget|DOMNode*/ widget, /*jshint unused: vars */insertIndex) {
+				return function (/*HTMLElement*/ widget, /*jshint unused: vars */insertIndex) {
 					sup.apply(this, arguments);
-					setVisibility(widget, false);
+					if (this.children.length !== 1) {
+						setVisibility(widget, false);
+					}
 				};
 			}),
 
 			_setAfterTransitionHandlers: function (node, event, deferred) {
-				var handle = lang.hitch(this, this._afterTransitionHandle);
+				var handle = this._afterTransitionHandle.bind(this);
 				this._transitionEndHandlers.push({node: node, handle: handle, props: event, deferred: deferred});
 				node.addEventListener("webkitTransitionEnd", handle);
 				node.addEventListener("transitionend", handle); // IE10 + FF
@@ -208,11 +204,8 @@ define(["dcl/dcl",
 						if (domClass.contains(item.node, "-d-view-stack-out")) {
 							setVisibility(item.node, false);
 						}
-						domClass.remove(item.node, "-d-view-stack-in");
-						domClass.remove(item.node, "-d-view-stack-out");
-						domClass.remove(item.node, "-d-view-stack-reverse");
-						domClass.remove(item.node, transitionClass(item.props.transition));
-						domClass.remove(item.node, "-d-view-stack-transition");
+						domClass.remove(item.node, ["-d-view-stack-in", "-d-view-stack-out", "-d-view-stack-reverse",
+							transitionClass(item.props.transition), "-d-view-stack-transition"]);
 						item.node.removeEventListener("webkitTransitionEnd", item.handle);
 						item.node.removeEventListener("transitionend", item.handle);
 						this._transitionEndHandlers.splice(i, 1);

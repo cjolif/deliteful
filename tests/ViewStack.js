@@ -3,10 +3,9 @@ define([
 	"intern/chai!assert",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
-	"../register",
-	"dojo/text!../widgetTests/test_ViewStack.html",
-	"dui/css!../themes/defaultapp.css",
-	"dui/ViewStack"
+	"delite/register",
+	"dojo/text!../samples/test_ViewStack.html",
+	"deliteful/ViewStack"
 ], function (registerSuite, assert, domGeom, domClass, register, html) {
 	var node;
 	registerSuite({

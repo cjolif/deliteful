@@ -3,8 +3,8 @@ define([
 	"intern/chai!assert",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
-	"../register",
-	"../LinearLayout"
+	"delite/register",
+	"deliteful/LinearLayout"
 ], function (registerSuite, assert, domGeom, domClass, register) {
 	var node;
 	var htmlContent =
@@ -41,7 +41,7 @@ define([
 		},
 
 		teardown: function () {
-			document.body.removeChild(document.body.children[0]);
+			document.body.innerHTML = "";
 		}
 	});
 });

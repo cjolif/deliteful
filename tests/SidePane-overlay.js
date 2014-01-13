@@ -3,16 +3,15 @@ define([
 	"intern/chai!assert",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
-	"../register",
-	"dojo/text!../widgetTests/test_Sidepane-overlay.html",
-	"dui/css!../themes/defaultapp.css",
-	"dui/SidePane"
+	"delite/register",
+	"dojo/text!../samples/test_Sidepane-overlay.html",
+	"deliteful/SidePane"
 ], function (registerSuite, assert, domGeom, domClass, register, html) {
 	var node;
 	registerSuite({
 		name: "SidePane Overlay",
 		setup: function () {
-			html = html.replace("../themes", "../../themes");
+			html = html.replace("../../delite/themes/defaultapp.css", "../../../delite/themes/defaultapp.css");
 			document.body.innerHTML = html;
 			register.parse(document.body);
 			node = document.getElementById("sp");
@@ -36,7 +35,7 @@ define([
 			assert.isTrue(domClass.contains(node, "-d-side-pane-start"));
 		},
 		teardown: function () {
-			document.body.removeChild(document.body.children[0]);
+			document.body.innerHTML = "";
 		}
 	});
 });
