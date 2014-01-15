@@ -201,7 +201,7 @@ define(["dcl/dcl",
 				for (var i = 0; i < this._transitionEndHandlers.length; i++) {
 					item = this._transitionEndHandlers[i];
 					if (event.target === item.node) {
-						if (domClass.contains(item.node, "-d-view-stack-out")) {
+						if (event.target !== this._visibleChild && domClass.contains(item.node, "-d-view-stack-out")) {
 							setVisibility(item.node, false);
 						}
 						domClass.remove(item.node, ["-d-view-stack-in", "-d-view-stack-out", "-d-view-stack-reverse",
