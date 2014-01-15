@@ -131,8 +131,9 @@ define([
 				node.addEventListener("transitionend", handle); // IE10 + FF
 			},
 
-			_removeTransitionHandlers: function() {
-				this._transitionEndProps.node.removeEventListener("webkitTransitionEnd", this._transitionEndProps.handle);
+			_removeTransitionHandlers: function () {
+				this._transitionEndProps.node.removeEventListener("webkitTransitionEnd",
+					this._transitionEndProps.handle);
 				this._transitionEndProps.node.removeEventListener("transitionend", this._transitionEndProps.handle);
 			},
 

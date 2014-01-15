@@ -6,7 +6,7 @@ define([
 	"delite/register",
 	"deliteful/LinearLayout"
 ], function (registerSuite, assert, domGeom, domClass, register) {
-	var node;
+	var container, node;
 	var htmlContent =
 			"<d-linear-layout id='dlayout' vertical='false' style='width:680px'>" +
 				"<div id='divA' style='width:40px'>A</div>" +
@@ -14,8 +14,10 @@ define([
 	registerSuite({
 		name: " Horizontal LinearLayout Mixed Width",
 		setup: function () {
-			document.body.innerHTML = htmlContent;
-			register.parse(document.body);
+			container = document.createElement("div");
+			document.body.appendChild(container);
+			container.innerHTML = htmlContent;
+			register.parse(container);
 			node = document.getElementById("dlayout");
 		},
 		"Horizontal LinearLayout Various Width" : function () {
@@ -28,9 +30,9 @@ define([
 			assert.deepEqual(box2.w, 600);
 			assert.deepEqual(box3.w, 40);
 		},
-
-		teardown: function () {
-			document.body.innerHTML = "";
+		teardown : function () {
+			container.parentNode.removeChild(container);
 		}
+
 	});
 });

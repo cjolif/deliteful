@@ -4,15 +4,19 @@ define([
 	"dojo/dom-geometry",
 	"dojo/dom-class",
 	"delite/register",
-	"dojo/text!../samples/test_ViewStack.html",
 	"deliteful/ViewStack"
-], function (registerSuite, assert, domGeom, domClass, register, html) {
-	var node;
+], function (registerSuite, assert, domGeom, domClass, register) {
+	var container, node;
+	var aaa, bbb, ccc, ddd;
+	var htmlContent = "<d-view-stack id='vs'><div id='aaa'>AAA</div><div id='bbb'>BBB</div><div id='ccc'>CCC</div>" +
+		"<div id='ddd'>DDD</div></d-view-stack>";
 	registerSuite({
 		name: "ViewStack",
 		setup: function () {
-			document.body.innerHTML = html;
-			register.parse(document.body);
+			container = document.createElement("div");
+			document.body.appendChild(container);
+			container.innerHTML = htmlContent;
+			register.parse(container);
 			node = document.getElementById("vs");
 		},
 		"Default CSS" : function () {
@@ -27,43 +31,43 @@ define([
 			assert.deepEqual(bbb.style.display, "");
 		},
 		"Show (no transition)" : function () {
-			node.show(ccc, {transition:"none"});
+			node.show(ccc, {transition: "none"});
 			assert.deepEqual(ccc.style.display, "");
 		},
 		"Show (reverse)" : function () {
-			node.show(ddd, {reverse:true});
+			node.show(ddd, {reverse: true});
 			assert.deepEqual(ddd.style.display, "");
 		},
 		"Show (reverse, no transition)" : function () {
-			node.show(aaa, {transition:"none", reverse: true});
+			node.show(aaa, {transition: "none", reverse: true});
 			assert.deepEqual(aaa.style.display, "");
 		},
 		"Show (reveal)" : function () {
-			node.show(bbb, {transition:"reveal", reverse: false});
+			node.show(bbb, {transition: "reveal", reverse: false});
 			assert.deepEqual(bbb.style.display, "");
 		},
 		"Show (reverse, reveal)" : function () {
-			node.show(ccc, {transition:"reveal", reverse:true});
+			node.show(ccc, {transition: "reveal", reverse: true});
 			assert.deepEqual(ccc.style.display, "");
 		},
 		"Show (flip)" : function () {
-			node.show(ddd, {transition:"flip", reverse: false});
+			node.show(ddd, {transition: "flip", reverse: false});
 			assert.deepEqual(ddd.style.display, "");
 		},
 		"Show (reverse, flip)" : function () {
-			node.show(aaa, {transition:"flip", reverse:true});
+			node.show(aaa, {transition: "flip", reverse: true});
 			assert.deepEqual(aaa.style.display, "");
 		},
 		"Show (fade)" : function () {
-			node.show(bbb, {transition:"fade", reverse: false});
+			node.show(bbb, {transition: "fade", reverse: false});
 			assert.deepEqual(bbb.style.display, "");
 		},
 		"Show (reverse, fade)" : function () {
-			node.show(ccc, {transition:"slide", reverse:true});
+			node.show(ccc, {transition: "slide", reverse: true});
 			assert.deepEqual(ccc.style.display, "");
 		},
 		teardown: function () {
-			document.body.innerHTML = "";
+			container.parentNode.removeChild(container);
 		}
 	});
 });

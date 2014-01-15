@@ -6,15 +6,17 @@ define([
 	"delite/register",
 	"deliteful/LinearLayout"
 ], function (registerSuite, assert, domGeom, domClass, register) {
-	var node;
+	var container, node;
 	var htmlContent =
 		"<d-linear-layout id='dlayout' style='height:500px'><div id='divA' class='fill'>A</div>" +
 			"<div id='divB' style='height:30px'>B</div></d-linear-layout>";
 	registerSuite({
 		name: "Vertical LinearLayout",
 		setup: function () {
-			document.body.innerHTML = htmlContent;
-			register.parse(document.body);
+			container = document.createElement("div");
+			document.body.appendChild(container);
+			container.innerHTML = htmlContent;
+			register.parse(container);
 			node = document.getElementById("dlayout");
 		},
 		"Vertical LinearLayout Fill Height" : function () {
@@ -39,9 +41,8 @@ define([
 			assert.deepEqual(box1.h, 250);
 			assert.deepEqual(box1.h, box2.h);
 		},
-
-		teardown: function () {
-			document.body.innerHTML = "";
+		teardown : function () {
+			container.parentNode.removeChild(container);
 		}
 	});
 });
