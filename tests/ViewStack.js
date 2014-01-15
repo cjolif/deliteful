@@ -18,6 +18,10 @@ define([
 			container.innerHTML = htmlContent;
 			register.parse(container);
 			node = document.getElementById("vs");
+			aaa = document.getElementById("aaa");
+			bbb = document.getElementById("bbb");
+			ccc = document.getElementById("ccc");
+			ddd = document.getElementById("ddd");
 		},
 		"Default CSS" : function () {
 			assert.isTrue(domClass.contains(node, "d-view-stack"));
