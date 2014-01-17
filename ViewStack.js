@@ -203,8 +203,8 @@ define(["dcl/dcl",
 						item.node.removeEventListener("webkitTransitionEnd", item.handle);
 						item.node.removeEventListener("transitionend", item.handle);
 						this._transitionEndHandlers.splice(i, 1);
-						if (item.props.deferred) {
-							item.props.deferred.resolve();
+						if (item.deferred) {
+							item.deferred.resolve();
 						}
 						break;
 					}
