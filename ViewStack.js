@@ -154,31 +154,25 @@ define(["dcl/dcl",
 				return deferred;
 			},
 
-			show: function (/* HTMLElement */ node, props) {
-				//		Shows a children of the ViewStack. The parameter 'props' is optional. If not specified,
-				//		its value is {transition: this.transition, reverse: this.reverse}. In other words,
-				//		transition and/or reverse properties are used.
-				if (!this._visibleChild) {
-					this._visibleChild = this.children[0];
-				}
-				var origin = this._visibleChild;
-				if (origin !== node) {
-					if (!props) {
-						props = {transition: this.transition, reverse: this.reverse};
+			show: dcl.superCall(function (sup) {
+				return function (/* HTMLElement */ node, props) {
+					//		Shows a children of the ViewStack. The parameter 'props' is optional. If not specified,
+					//		its value is {transition: this.transition, reverse: this.reverse}. In other words,
+					//		transition and/or reverse properties are used.
+					if (!this._visibleChild) {
+						this._visibleChild = this.children[0];
 					}
-					else if (!props.transition) {
-						props.transition = this.transition;
+					var origin = this._visibleChild;
+					if (origin !== node) {
+						if (!props) {
+							props = {transition: this.transition, reverse: this.reverse};
+						} else if (!props.transition) {
+							props.transition = this.transition;
+						}
+						return sup.call(this, node, props);
 					}
-					dcl.mix(props, {
-						dest: node,
-						transitionDeferred: new Deferred(),
-						bubbles: true,
-						cancelable: true
-					});
-					on.emit(document, "delite-display", props);
-				}
-
-			},
+				};
+			}),
 
 			addChild: dcl.superCall(function (sup) {
 				return function (/*HTMLElement*/ widget, /*jshint unused: vars */insertIndex) {
