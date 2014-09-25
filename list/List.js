@@ -7,8 +7,6 @@ define([
 	"dojo/when",
 	"dojo/dom-class",
 	"delite/keys",
-	"dstore/Memory",
-	"dstore/Trackable",
 	"delite/CustomElement",
 	"delite/Selection",
 	"delite/KeyNav",
@@ -19,13 +17,8 @@ define([
 	"./_LoadingPanel",
 	"delite/theme!./List/themes/{{theme}}/List.css",
 	"requirejs-dplugins/has!dojo-bidi?delite/theme!./List/themes/{{theme}}/List_rtl.css"
-], function (dcl, register, on, lang, when, domClass, keys, Memory, Trackable, CustomElement,
+], function (dcl, register, on, lang, when, domClass, keys, CustomElement,
 		Selection, KeyNav, StoreMap, Scrollable, ItemRenderer, CategoryRenderer, LoadingPanel) {
-
-	var DefaultStore = Memory.createSubclass([Trackable], {});
-
-	// Register custom elements we use to support markup for adding items to the list store.
-	register("d-list-store", [HTMLElement, CustomElement]);
 
 	/**
 	 * A widget that renders a scrollable list of items.
@@ -254,8 +247,6 @@ define([
 		},
 
 		postRender: function () {
-			//	Assign a default store to the list.
-			this.store = new DefaultStore();
 			// Listen to deactive events.
 			this.on("delite-deactivated", this._listDeactivatedHandler.bind(this));
 		},
@@ -275,24 +266,10 @@ define([
 		}),
 
 		startup: dcl.before(function () {
-			// Starts the widget: parse the content of the widget node to clean it,
-			//	add items to the store if specified in markup.
-			// Have to keep this in startup since we call destroy()...
-			var children = Array.prototype.slice.call(this.children);
-			if (children.length) {
-				for (var i = 0; i < children.length; i++) {
-					var child = children[i];
-					if (child.tagName === "D-LIST-STORE") {
-						var data = JSON.parse("[" + child.textContent + "]");
-						for (var j = 0; j < data.length; j++) {
-							this.store.add(data[j]);
-						}
-					}
-					if (child !== this.scrollableNode && child !== this._loadingPanel) {
-						child.destroy();
-					}
-				}
-			}
+			//	Using dcl.before() rather than the default dcl.chainAfter() chaining so that the code runs
+			//	before StoreMap.attachedCallback()
+			this._setBusy(true, true);
+			this.on("query-error", function () { this._setBusy(false, true); }.bind(this));
 		}),
 
 		refreshRendering: function (props) {
