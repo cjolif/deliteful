@@ -3,7 +3,12 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 	function (dcl, register, CustomElement, Memory, Trackable) {
 
 	var Store = Memory.createSubclass([Trackable], {});
-	
+
+	var excludePropertiesOnCopy = {
+		data: true,
+		total: true
+	};
+
 	/**
 	 * Custom element to create an instance of a memory store object. 
 	 * This is particularly useful in markup, when creating store programatically this is easier to just create a store
@@ -35,6 +40,19 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 			}
 			store.setData(data);
 			dcl.mix(this, store);
+			// override createSubCollection to avoid issue with IE
+			var self = this;
+			this._createSubCollection = function (kwArgs) {
+				var newCollection = Object.create(store.constructor.prototype);
+				for (var i in store) {
+					if ((!(i in newCollection) || newCollection[i] !== self[i])
+						&& !excludePropertiesOnCopy.hasOwnProperty(i)) {
+						newCollection[i] = self[i];
+					}
+				}
+				dcl.mix(newCollection, kwArgs);
+				return newCollection;
+			};
 		}
 	});
 });
