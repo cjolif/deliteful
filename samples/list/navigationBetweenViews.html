@@ -17,18 +17,18 @@
 	<script type="text/javascript">
 		require([
 			"delite/register",
-			"deliteful/Store",
 			"deliteful/list/ItemRenderer",
 			"delite/handlebars!deliteful/samples/list/templates/NavigationItemRenderer.html",
 			"deliteful/ViewStack",
 			"delite/theme!delite/themes/{{theme}}/global.css"	// page level CSS
-		], function(register, Store, ItemRenderer, template){
+		], function(register, ItemRenderer, template){
 			// Custom item renderer that renders a navigation button
 			NavigationItemRenderer = register("d-navigation-item", [HTMLElement, ItemRenderer], {
 				template: template
 			});
 			require([
 				"delite/keys",
+				"deliteful/Store",
 				"deliteful/list/List",
 				"requirejs-domready/domReady!"], function (keys) {
 				register.parse();
@@ -178,7 +178,7 @@
 	</div>
 	<div id="view7">
 		<h1>List 7</h1>
-		<d-store>
+		<d-store id="store7">
 			{"label": "To list 1", "righticonclass": "rightIcon", "moveTo": "view1"},
 			{"label": "To list 2", "righticonclass": "rightIcon", "moveTo": "view2"},
 			{"label": "To list 3", "righticonclass": "rightIcon", "moveTo": "view3"},
@@ -186,7 +186,7 @@
 			{"label": "To list 5", "righticonclass": "rightIcon", "moveTo": "view5"},
 			{"label": "To list 6", "righticonclass": "rightIcon", "moveTo": "view6"}
 		</d-store>
- 		<d-list id="list7" arial-label="navigation list 7"
+ 		<d-list id="list7" arial-label="navigation list 7" store="store7"
  			movetoAttr="moveTo" itemRenderer="NavigationItemRenderer">
 		</d-list>
 	</div>

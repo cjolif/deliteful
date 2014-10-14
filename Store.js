@@ -8,6 +8,14 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 		data: true,
 		total: true
 	};
+		
+	var STORE_TYPES = [
+		"add",
+		"remove",
+		"put",
+		"delete",
+		"refresh"
+	];
 
 	/**
 	 * Custom element to create an instance of a memory store object. 
@@ -39,6 +47,8 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 				}
 			}
 			store.setData(data);
+			this._emit = this.emit;
+			this._on = this.on;
 			dcl.mix(this, store);
 			// override createSubCollection to avoid issue with IE
 			var self = this;
@@ -53,6 +63,24 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 				dcl.mix(newCollection, kwArgs);
 				return newCollection;
 			};
-		}
+		},
+		on: dcl.superCall(function (sup) {
+			return function (type) {
+				if (STORE_TYPES.indexOf(type) !== -1) {
+					this._on(arguments);
+				} else {
+					sup.apply(this, arguments);
+				}
+			};
+		}),
+		emit: dcl.superCall(function (sup) {
+			return function (type) {
+				if (STORE_TYPES.indexOf(type) !== -1) {
+					this._emit(arguments);
+				} else {
+					sup.apply(this, arguments);
+				}
+			};
+		})
 	});
 });
