@@ -19,8 +19,8 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 
 	/**
 	 * Custom element to create an instance of a memory store object. 
-	 * This is particularly useful in markup, when creating store programatically this is easier to just create a store
-	 * instance directly than the custom element.
+	 * It is particularly useful in markup, when creating store programatically, it's easier to just create a store
+	 * instance directly rather than using the custom element.
 	 * Note that it is only parsed once at attachment time. Further modifications to the store must be made through
 	 * the store API instead of the DOM API.
 	 * @example
