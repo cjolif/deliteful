@@ -1,21 +1,19 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
 env:
   global:
-    - secure: "Ty9a+MKs2JxvGFsV+5Sq9zMLeqYX8OH8FIAzJ00Bw9YdLFcejlFeOqEtSQLPtelDt3kFtddkRssJl2ycLKa6IXPBx09aEQXuzW8o0XgSw+WfR8AqMiKU+N0GrAcyx1ejKnxXxuVHStf703HuCu44CexgCUCnXybKz6V60O+odwk="
-    - secure: "Nx+qPRZqdGfDWQ+lHSDd0TZlXlv9SJqU0WXTD2eMeYR1pPJAZtRtgC1F98qCsiFo/0Vi+JpKFq5W5u0eykfj/43TUQMUtjeJmzefyjZYTsDRoMjQViiX8XyyPEV3kTbTEV3NocQn5WZhB655+hRZqjP7ZzSh9N3tFwWBInY/AQU="
-
+  - secure: Ty9a+MKs2JxvGFsV+5Sq9zMLeqYX8OH8FIAzJ00Bw9YdLFcejlFeOqEtSQLPtelDt3kFtddkRssJl2ycLKa6IXPBx09aEQXuzW8o0XgSw+WfR8AqMiKU+N0GrAcyx1ejKnxXxuVHStf703HuCu44CexgCUCnXybKz6V60O+odwk=
+  - secure: Nx+qPRZqdGfDWQ+lHSDd0TZlXlv9SJqU0WXTD2eMeYR1pPJAZtRtgC1F98qCsiFo/0Vi+JpKFq5W5u0eykfj/43TUQMUtjeJmzefyjZYTsDRoMjQViiX8XyyPEV3kTbTEV3NocQn5WZhB655+hRZqjP7ZzSh9N3tFwWBInY/AQU=
+  - secure: O2nocUhSsN0ySqIgu2bZRV7IQpaH9KSLnC+eR80W3UWGA0ONUyiTgrAgvE46zDE9NEEzyvx2EFDcWhcc2gAoJawWOODX34ntiVYONFXP5FreUfjE5kDhywxcGl79iG3jC1uAumn+tbjhMfBTpJkC+U4/N0S0fgVFWdMwiMvzp+I=
+  - secure: kffBbRp9cbSN9bSQa+phhI+/yYKhVfVyMX8sH7kCFfA7/3y49yRcskj/1WrGo1EccVuog7uyYyZ4GyowKdEwHSFEdsWXZ21I4GUstLI4vjVl8ILYOdI9tWhvXlfV0i+qsSixqs4W85ou8FLIe0WJXUjTeir/SY3vvDpH9AzTdSk=
 install:
    - npm install -g grunt-cli
    - npm -g install bower
    - npm install
    - bower install -F
-
 notifications:
   email:
-    on_failure : "change"
-
+    on_failure: change
 script:
-   - grunt jshint test:remote
-
+- grunt jshint test:remote
