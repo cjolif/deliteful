@@ -2,15 +2,13 @@
 define([
 	"dcl/dcl",
 	"dojo/dom-class", // TODO: replace (when replacement confirmed)
-	"dstore/Memory",
-	"dstore/Trackable",
 	"delite/register",
 	"delite/FormWidget",
 	"delite/StoreMap",
 	"delite/Selection",
 	"delite/handlebars!./Select/Select.html",
 	"delite/theme!./Select/themes/{{theme}}/Select.css"
-], function (dcl, domClass, Memory, Trackable, register,
+], function (dcl, domClass, register,
 	FormWidget, StoreMap, Selection, template) {
 
 	/**
@@ -129,10 +127,6 @@ define([
 		template: template,
 		
 		attachedCallback: function () {
-			if (!this.store) { // If not specified by the user
-				this.store = new (Memory.createSubclass(Trackable))({});
-			}
-			
 			// To provide graphic feedback for focus, react to focus/blur events
 			// on the underlying native select. The CSS class is used instead
 			// of the focus pseudo-class because the browsers give the focus
