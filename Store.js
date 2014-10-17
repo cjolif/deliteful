@@ -14,7 +14,8 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 		"remove",
 		"put",
 		"delete",
-		"refresh"
+		"refresh",
+		"update"
 	];
 
 	/**
@@ -47,9 +48,16 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 				}
 			}
 			store.setData(data);
-			this._emit = this.emit;
-			this._on = this.on;
+			// save store specific on/emit and later use them only for store specific events
+			store._emit = store.emit;
+			store._on = store.on;
+			// save custom element specific on/emit to restore them after mixin
+			var emit = this.emit;
+			var on = this.on;
 			dcl.mix(this, store);
+			this.emit = emit;
+			this.on = on;
+			// 
 			// override createSubCollection to avoid issue with IE
 			var self = this;
 			this._createSubCollection = function (kwArgs) {
@@ -67,18 +75,18 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 		on: dcl.superCall(function (sup) {
 			return function (type) {
 				if (STORE_TYPES.indexOf(type) !== -1) {
-					this._on(arguments);
+					return this._on.apply(this, arguments);
 				} else {
-					sup.apply(this, arguments);
+					return sup.apply(this, arguments);
 				}
 			};
 		}),
 		emit: dcl.superCall(function (sup) {
 			return function (type) {
 				if (STORE_TYPES.indexOf(type) !== -1) {
-					this._emit(arguments);
+					return this._emit.apply(this, arguments);
 				} else {
-					sup.apply(this, arguments);
+					return sup.apply(this, arguments);
 				}
 			};
 		})
