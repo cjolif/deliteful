@@ -47,8 +47,9 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 				}
 			}
 			store.setData(data);
-			this._emit = this.emit;
-			this._on = this.on;
+			// save store specific on/emit and later use them only for store specific events
+			this._emit = store.emit;
+			this._on = store.on;
 			dcl.mix(this, store);
 			// override createSubCollection to avoid issue with IE
 			var self = this;
