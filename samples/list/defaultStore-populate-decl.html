@@ -21,7 +21,8 @@
 		    "delite/register",
 			"deliteful/list/List",
 			"deliteful/Store",
-			"delite/theme!delite/themes/{{theme}}/global.css"	// page level CSS
+			"delite/theme!delite/themes/{{theme}}/global.css", // page level CSS
+			"requirejs-domready/domReady!"
 		], function (register) {
 			register.parse();
 			document.body.style.display = "";
