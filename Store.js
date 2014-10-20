@@ -55,9 +55,16 @@ define(["dcl/dcl", "delite/register", "delite/CustomElement", "dstore/Memory", "
 			var emit = this.emit;
 			var on = this.on;
 			dcl.mix(this, store);
+			// on iOS/Safari ctor is not copied but we need _meta for dstore/dojo declare to work
+			if (!this.constructor._meta) {
+				this.constructor._meta = store.constructor._meta;
+			}
+			// for bringing in dojo/_base/declare features
 			this.emit = emit;
 			this.on = on;
-			// 
+			// for bringing in dojo/_base/declare features
+			this.emit = emit;
+			this.on = on;
 			// override createSubCollection to avoid issue with IE
 			var self = this;
 			this._createSubCollection = function (kwArgs) {

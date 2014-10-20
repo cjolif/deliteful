@@ -347,6 +347,7 @@ define([
 			var select = document.getElementById("select1");
 			var store = new Store();
 			container.appendChild(store);
+			register.upgrade(store);
 			store.attachedCallback();
 			select.store = store;
 			select.deliver();
@@ -355,6 +356,7 @@ define([
 			select = document.getElementById("myselect1");
 			store = new Store();
 			container.appendChild(store);
+			register.upgrade(store);
 			store.attachedCallback();
 			select.store = store;
 			select.deliver();
