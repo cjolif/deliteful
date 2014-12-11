@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport"
+					content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+		<style>
+			.phone-icon:before {
+				content: "\260E";
+			}
+			html, body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+
+		</style>
+		<script src="../../requirejs/require.js"></script>
+		<script>
+			requirejs.config({
+				baseUrl: "../.."
+			});
+			require(["delite/register",
+					 "deliteful/LinearLayout", "deliteful/TabBar", "deliteful/ViewStack", "requirejs-domready/domReady!"],
+					function(register) {
+				register.parse();
+			})
+		</script>
+	</head>
+	<body>
+		<d-linear-layout style="width: 100%; height: 100%">
+			<d-tab-bar viewStack="vs" class="d-bar-justified">
+			</d-tab-bar>
+			<d-view-stack id="vs" style="width: 100%" class="fill">
+				<div id="a" style="background-color: red" title="1st view" iconClass="phone-icon"></div>
+				<div id="b" style="background-color: #008000" title="2nd view"></div>
+				<div id="c" style="background-color: #ffff00" title="3rd view"></div>
+			</d-view-stack>
+		</d-linear-layout>
+	</body>
+</html>

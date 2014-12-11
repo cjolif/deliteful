@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			.phone-icon:before {
+				content: "\260E";
+			}
+		</style>
+		<script src="../../requirejs/require.js"></script>
+		<script src="../../jquery/dist/jquery.js"></script>
+		<script>
+			requirejs.config({
+				baseUrl: "../.."
+			});
+			require(["delite/register", "deliteful/Bar", "deliteful/Checkbox", "deliteful/Button", "requirejs-domready/domReady!"],
+					function(register) {
+				register.parse();
+			})
+		</script>
+	</head>
+	<body>
+		<d-bar style="background-color: #adff2f" id="bar">
+			<button is="d-button">Choice 1</button>
+			<button is="d-button">A longer choice</button>
+			<button is="d-button">Choice 3</button>
+		</d-bar>
+		<d-checkbox onclick="console.log('click'); bar.vertical = !bar.vertical"></d-checkbox><label>Vertical?</label>
+		<d-checkbox onclick="console.log('click'); $(bar).toggleClass('d-bar-justified')"></d-checkbox><label>Justified?</label>
+	</body>
+</html>

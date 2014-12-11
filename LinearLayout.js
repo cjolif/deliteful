@@ -30,7 +30,7 @@ define([
 		baseClass: "d-linear-layout",
 
 		/**
-		 * True if the container is vertical.
+		 * Whether the layout is vertical or not.
 		 * @member {boolean}
 		 * @default true
 		 */
