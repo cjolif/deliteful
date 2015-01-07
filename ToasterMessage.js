@@ -179,6 +179,7 @@ define(["dcl/dcl",
 			_startDate = null;
 
 		function _start(duration) {
+			console.log("started", duration);
 			_startDate = Date.now();
 			return new Promise(function (resolve) {
 				_timer = setTimeout(resolve, duration);
@@ -190,6 +191,7 @@ define(["dcl/dcl",
 		};
 
 		this.pause = function () {
+			console.log("paused");
 			if (_timer !== null) {
 				clearTimeout(_timer);
 				var rt = duration - Date.now() + _startDate;
@@ -422,7 +424,7 @@ define(["dcl/dcl",
 					$(this).removeClass(toaster.animationInitialClass);
 					$(this).addClass(toaster.animationEnterClass);
 					listenAnimationEvents(this, function (element) {
-						$(element).addClass(toaster.animationEnterClass);
+						$(element).removeClass(toaster.animationEnterClass);
 
 						// NOTE: the swipe dismissing is made possible only once the entering animation is done
 						// this is done to avoid the CSS of the animation to interfere with the swipe
