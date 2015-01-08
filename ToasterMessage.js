@@ -175,23 +175,24 @@ define(["dcl/dcl",
 
 	// TODO: this could be abstracted in a separate class, so that it can be used by other widgets
 	var Timer = function (duration) {
-		var _timer = null, _remaining = null,
-			_startDate = null;
-
-		function _start(duration) {
-			console.log("started", duration);
-			_startDate = Date.now();
-			return new Promise(function (resolve) {
-				_timer = setTimeout(resolve, duration);
+		var _timer = null, _remaining = null, _startDate = null, 
+			_start = null, _destroy = null,
+			_promise = new Promise(function (resolve, reject) {
+				_start = function (duration) {
+					_startDate = Date.now();
+					_timer = setTimeout(resolve, duration);
+				};
+				_reject = function () {
+					reject();
+				};
 			});
-		}
 
 		this.start = function () {
-			return _start(duration);
+			_start(duration);
+			return _promise;
 		};
 
 		this.pause = function () {
-			console.log("paused");
 			if (_timer !== null) {
 				clearTimeout(_timer);
 				var rt = duration - Date.now() + _startDate;
@@ -202,8 +203,11 @@ define(["dcl/dcl",
 		};
 
 		this.resume = function () {
-			return _start(_remaining);
+			_start(_remaining);
+			return _promise;
 		};
+
+		this.cancel = _reject;
 	};
 
 	var D_INVISIBLE = "d-invisible",
@@ -484,7 +488,13 @@ define(["dcl/dcl",
 					this.dismiss();
 				}.bind(this), this._dismissButton);
 			}
-		}
+		},
+		destroy: dcl.superCall(function (sup) {
+			return function () {
+				this._timer.cancel();
+				return sup.apply(self, arguments);
+			};
+		})
 	});
 	return register("d-toaster-message", [HTMLElement, ToasterMessage]);
 });
