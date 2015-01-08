@@ -176,15 +176,13 @@ define(["dcl/dcl",
 	// TODO: this could be abstracted in a separate class, so that it can be used by other widgets
 	var Timer = function (duration) {
 		var _timer = null, _remaining = null, _startDate = null, 
-			_start = null, _destroy = null,
+			_start = null, _reject = null,
 			_promise = new Promise(function (resolve, reject) {
 				_start = function (duration) {
 					_startDate = Date.now();
 					_timer = setTimeout(resolve, duration);
 				};
-				_reject = function () {
-					reject();
-				};
+				_reject = reject;
 			});
 
 		this.start = function () {
@@ -207,7 +205,11 @@ define(["dcl/dcl",
 			return _promise;
 		};
 
-		this.cancel = _reject;
+		this.cancel = function () {
+			if (_promise.state[0] === "PENDING") {
+				_reject();
+			}
+		};
 	};
 
 	var D_INVISIBLE = "d-invisible",
