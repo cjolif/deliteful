@@ -1,13 +1,12 @@
 define([
 	"intern!object",
 	"intern/chai!assert",
-	"dojo/dom-geometry",
 	"delite/register",
-	"deliteful/LinearLayout"
-], function (registerSuite, assert, domGeom, register) {
+	"deliteful/Bar"
+], function (registerSuite, assert, register) {
 	var container, node;
 	var htmlContent =
-		"<d-linear-layout id='dlayout' vertical='false' style='width:999px; height:999px'>" +
+		"<d-bar id='dbar' vertical='false' style='width:999px; height:999px'>" +
 			"<div id='divA' class='fill'>A</div><div id='divB' class='fill'>B</div>" +
 			"<div id='divC' class='fill'>C</div></d-linear-layout>";
 	registerSuite({
