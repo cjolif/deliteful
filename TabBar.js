@@ -41,20 +41,19 @@ define(["dcl/dcl", "delite/register", "./Bar", "./ToggleButton", "requirejs-dplu
 
 		preRender: function () {
 			// we want to inherit from Bar
-			$(this).addClass("d-bar");
+			$(this).addClass(Bar._ctor.prototype.baseClass);
 		},
 
 		refreshRendering: function (oldValues) {
 			if ("viewStack" in oldValues) {
 				// take all existing views and fill the bar with corresponding buttons
-				var children = this.viewStack.getChildren();
-				for (var i = 0; i < children.length; i++) {
-					this.renderTabButton(children[i]);
-				}
+				this.viewStack.getChildren().forEach(function (element) {
+					this.renderTabButton(element);
+				}.bind(this));
 				// if new views are added later we must add more buttons
-				dcl.after(this.viewStack.onAddChild, function (node) {
+				this.viewStack.on("delite-add-child", function (event) {
 					// FIXME: issue with the index this should not always be added to the end of the list
-					this.renderTabButton(node);
+					this.renderTabButton(event.child);
 				}.bind(this));
 				// we must also listen to possible changes on selected view to replicate it
 				this.viewStack.on("delite-after-show", function () {

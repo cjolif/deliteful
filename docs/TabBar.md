@@ -24,9 +24,8 @@ See [`delite/Widget`](/delite/docs/master/Widget.md) for full details on how ins
 ### Declarative Instantiation
 
 ```js
-require(["delite/register", "deliteful/TabBar", "requirejs-dplugins/domReady!"], 
-  function (register) {
-  register.parse();
+require(["deliteful/TabBar", "requirejs-dplugins/domReady!"], 
+  function () {
 });
 ```
 

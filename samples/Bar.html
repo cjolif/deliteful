@@ -12,9 +12,8 @@
 			requirejs.config({
 				baseUrl: "../.."
 			});
-			require(["delite/register", "deliteful/Bar", "deliteful/Checkbox", "deliteful/Button", "requirejs-domready/domReady!"],
-					function(register) {
-				register.parse();
+			require(["deliteful/Bar", "deliteful/Checkbox", "deliteful/Button", "requirejs-domready/domReady!"],
+					function() {
 			})
 		</script>
 	</head>

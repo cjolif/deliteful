@@ -24,9 +24,8 @@ See [`delite/Widget`](/delite/docs/master/Widget.md) for full details on how ins
 ### Declarative Instantiation
 
 ```js
-require(["delite/register", "deliteful/Bar", "deliteful/Button", "requirejs-dplugins/domReady!"], 
-  function (register) {
-  register.parse();
+require(["deliteful/Bar", "deliteful/Button", "requirejs-dplugins/domReady!"], 
+  function () {
 });
 ```
 
@@ -49,7 +48,6 @@ require(["deliteful/Bar", "deliteful/Button", "requirejs-dplugins/domReady!"], f
   bar.appendChild(new Button({label: "Action #2"});
   bar.appendChild(new Button({label: "Action #3"});
   bar.placeAt(document.body);
-  bar.startup();
 });
 ```
 

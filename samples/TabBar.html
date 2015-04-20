@@ -19,10 +19,8 @@
 			requirejs.config({
 				baseUrl: "../.."
 			});
-			require(["delite/register",
-					 "deliteful/LinearLayout", "deliteful/TabBar", "deliteful/ViewStack", "requirejs-domready/domReady!"],
-					function(register) {
-				register.parse();
+			require(["deliteful/LinearLayout", "deliteful/TabBar", "deliteful/ViewStack", "requirejs-domready/domReady!"],
+					function() {
 			})
 		</script>
 	</head>
